@@ -175,16 +175,40 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            android:id="@+id/tvNetworkInfo"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/networkInfo"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Network Info"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:id="@+id/tvNetworkInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Network Info"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvNetworkName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="networkName"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvNetworkPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="passPhrase"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnEndClass"
@@ -197,44 +221,51 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvNetworkInfo" />
+            app:layout_constraintTop_toBottomOf="@+id/networkInfo" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/attendanceList"
-            android:layout_width="316dp"
-            android:layout_height="368dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnEndClass"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/studentChat"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/attendanceList" />
 
-        <!--        <LinearLayout-->
-        <!--            android:id="@+id/studentChat"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:orientation="horizontal"-->
-        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent">-->
+        <LinearLayout
+            android:id="@+id/studentChatForm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/studentChat">
 
-        <!--            <EditText-->
-        <!--                android:id="@+id/enterMessage"-->
-        <!--                android:layout_width="0dp"-->
-        <!--                android:layout_weight="1"-->
-        <!--                android:inputType="textMultiLine"-->
-        <!--                android:minLines="3"-->
-        <!--                android:maxLines="5"-->
-        <!--                android:hint="Send to student..."-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                />-->
+            <EditText
+                android:id="@+id/enterMessage"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:maxLines="5"
+                android:hint="Send to student..."
+                android:layout_height="wrap_content"
+                />
 
-        <!--            <Button-->
-        <!--                android:layout_width="0dp"-->
-        <!--                android:layout_weight="0.4"-->
-        <!--                android:text="Send"-->
-        <!--                android:onClick="sendMessage"-->
-        <!--                android:layout_height="wrap_content"/>-->
-        <!--        </LinearLayout>-->
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="0.4"
+                android:text="Send"
+                android:onClick="sendMessage"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

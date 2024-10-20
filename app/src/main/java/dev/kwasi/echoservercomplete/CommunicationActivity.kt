@@ -23,9 +23,12 @@ import dev.kwasi.echoservercomplete.network.NetworkMessageInterface
 import dev.kwasi.echoservercomplete.network.Server
 import dev.kwasi.echoservercomplete.peerlist.PeerListAdapter
 import dev.kwasi.echoservercomplete.peerlist.PeerListAdapterInterface
+import dev.kwasi.echoservercomplete.peerlist.AttendeeListAdapter
+import dev.kwasi.echoservercomplete.peerlist.AttendeeListAdapterInterface
 import dev.kwasi.echoservercomplete.wifidirect.WifiDirectInterface
 import dev.kwasi.echoservercomplete.wifidirect.WifiDirectManager
 import android.util.Log
+import android.widget.TextView
 import java.security.MessageDigest
 import kotlin.text.Charsets.UTF_8
 import javax.crypto.spec.SecretKeySpec
@@ -39,7 +42,7 @@ import kotlin.random.Random
 fun ByteArray.toHex() = joinToString(separator = "") { byte-> "%02x".format(byte) }
 fun getFirstNChars(str: String, n:Int) = str.substring(0,n)
 
-class CommunicationActivity : AppCompatActivity(), WifiDirectInterface, PeerListAdapterInterface, NetworkMessageInterface {
+class CommunicationActivity : AppCompatActivity(), WifiDirectInterface, PeerListAdapterInterface, AttendeeListAdapterInterface, NetworkMessageInterface {
     private var wfdManager: WifiDirectManager? = null
 
     private val intentFilter = IntentFilter().apply {
@@ -51,6 +54,7 @@ class CommunicationActivity : AppCompatActivity(), WifiDirectInterface, PeerList
 
     private var peerListAdapter:PeerListAdapter? = null
     private var chatListAdapter:ChatListAdapter? = null
+    private var attendeeListAdapter:AttendeeListAdapter? = null
 
     private var wfdAdapterEnabled = false
     private var wfdHasConnection = false
@@ -287,13 +291,36 @@ class CommunicationActivity : AppCompatActivity(), WifiDirectInterface, PeerList
         {
             classStartedView.visibility = View.GONE
         }
+
+        val networkName: TextView = findViewById(R.id.tvNetworkName)
+        val networkNameString: String = wfdManager?.groupInfo?.networkName ?: ""
+        networkName.text = networkNameString
+
+        Log.e("CA", networkNameString)
+
+        val networkPassword: TextView = findViewById(R.id.tvNetworkPassword)
+        val networkPasswordString: String = wfdManager?.groupInfo?.passphrase ?: ""
+        networkPassword.text = networkPasswordString
+
+        Log.e("CA", networkPasswordString)
     }
 
     fun sendMessage(view: View) {
-        val etMessage:EditText = findViewById(R.id.etMessage)
-        val etString = etMessage.text.toString()
-        val content = ContentModel(etString, deviceIp)
-        etMessage.text.clear()
+        val enterMessage:EditText = findViewById(R.id.enterMessage)
+        val enterString = enterMessage.text.toString()
+
+        val seed = "816117992"
+        val encryptedMessage = getEncryption(enterString, seed)
+
+        Log.e("CA", enterString)
+        Log.e("CA", encryptedMessage)
+
+        val decryptedMessage = decryptMessage(encryptedMessage, generateAESKey(hashStrSha256(seed)), generateIV(hashStrSha256(seed)))
+
+        Log.e("CA", decryptedMessage)
+
+        val content = ContentModel(enterString, deviceIp)
+        enterMessage.text.clear()
         client?.sendMessage(content)
         chatListAdapter?.addItemToEnd(content)
 
@@ -343,6 +370,7 @@ class CommunicationActivity : AppCompatActivity(), WifiDirectInterface, PeerList
 
             Log.e("CA", "A student joined the group")
         }
+
     }
 
     override fun onDeviceStatusChanged(thisDevice: WifiP2pDevice) {
@@ -353,6 +381,22 @@ class CommunicationActivity : AppCompatActivity(), WifiDirectInterface, PeerList
     override fun onPeerClicked(peer: WifiP2pDevice) {
         wfdManager?.connectToPeer(peer)
     }
+
+    private fun switchStudentChat()
+    {
+
+    }
+
+    override fun onAttendeeClicked(attendee: WifiP2pDevice)
+    {
+        switchStudentChat()
+    }
+
+    private fun onAttendeeClicked()
+    {
+        Log.e("CA","Attendee clicked")
+    }
+
 
 
     override fun onContent(content: ContentModel) {
