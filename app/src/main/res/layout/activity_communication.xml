@@ -223,14 +223,36 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/networkInfo" />
 
+        <TextView
+            android:id="@+id/tvAttendees"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Attendees"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnEndClass" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/attendanceList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnEndClass"/>
+            app:layout_constraintTop_toBottomOf="@+id/tvAttendees"/>
+
+        <TextView
+            android:id="@+id/tvStudentChat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Student Chat - "
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/attendanceList" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/studentChat"
@@ -239,7 +261,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/attendanceList" />
+            app:layout_constraintTop_toBottomOf="@+id/tvStudentChat" />
 
         <LinearLayout
             android:id="@+id/studentChatForm"

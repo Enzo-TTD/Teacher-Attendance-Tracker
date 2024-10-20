@@ -43,8 +43,6 @@ class Server(private val iFaceImpl:NetworkMessageInterface) {
             clientMap[it] = socket
             Log.e("SERVER", "A new connection has been detected!")
 
-
-
             thread {
                 val clientReader = socket.inputStream.bufferedReader()
                 val clientWriter = socket.outputStream.bufferedWriter()

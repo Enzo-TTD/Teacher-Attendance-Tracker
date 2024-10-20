@@ -294,15 +294,15 @@ class CommunicationActivity : AppCompatActivity(), WifiDirectInterface, PeerList
 
         val networkName: TextView = findViewById(R.id.tvNetworkName)
         val networkNameString: String = wfdManager?.groupInfo?.networkName ?: ""
-        networkName.text = networkNameString
+        networkName.text = "Class Network: $networkNameString"
 
-        Log.e("CA", networkNameString)
+        Log.e("CA", "Class Network: $networkNameString")
 
         val networkPassword: TextView = findViewById(R.id.tvNetworkPassword)
         val networkPasswordString: String = wfdManager?.groupInfo?.passphrase ?: ""
-        networkPassword.text = networkPasswordString
+        networkPassword.text = "Network Password: $networkPasswordString"
 
-        Log.e("CA", networkPasswordString)
+        Log.e("CA", "Network Password: $networkPasswordString")
     }
 
     fun sendMessage(view: View) {
