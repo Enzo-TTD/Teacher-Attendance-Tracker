@@ -200,8 +200,13 @@ class CommunicationActivity : AppCompatActivity(), WifiDirectInterface, PeerList
         rvPeerList.adapter = peerListAdapter
         rvPeerList.layoutManager = LinearLayoutManager(this)
 
+        attendeeListAdapter = AttendeeListAdapter(this)
+        val rvAttendeeList: RecyclerView= findViewById(R.id.attendanceList)
+        rvAttendeeList.adapter = attendeeListAdapter
+        rvAttendeeList.layoutManager = LinearLayoutManager(this)
+
         chatListAdapter = ChatListAdapter()
-        val rvChatList: RecyclerView = findViewById(R.id.rvChat)
+        val rvChatList: RecyclerView = findViewById(R.id.studentChat)
         rvChatList.adapter = chatListAdapter
         rvChatList.layoutManager = LinearLayoutManager(this)
     }
@@ -234,6 +239,13 @@ class CommunicationActivity : AppCompatActivity(), WifiDirectInterface, PeerList
 //        {
 //            Log.e("CA", "Student ID not found")
 //        }
+
+        attendeeListAdapter?.addAttendee("816000000")
+        attendeeListAdapter?.addAttendee("816111111")
+        attendeeListAdapter?.addAttendee("816222222")
+        attendeeListAdapter?.addAttendee("816222222")
+        attendeeListAdapter?.addAttendee("816333333")
+        attendeeListAdapter?.addAttendee("816444444")
 
         updateUI()
     }
@@ -387,7 +399,7 @@ class CommunicationActivity : AppCompatActivity(), WifiDirectInterface, PeerList
 
     }
 
-    override fun onAttendeeClicked(attendee: WifiP2pDevice)
+    override fun onAttendeeClicked(attendee: String)
     {
         switchStudentChat()
     }

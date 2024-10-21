@@ -27,7 +27,6 @@
             android:layout_width="wrap_content"
             android:layout_weight="0.1"
             android:text="Ask Question"
-            android:onClick="switchChat"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

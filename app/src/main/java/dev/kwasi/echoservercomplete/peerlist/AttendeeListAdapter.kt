@@ -11,7 +11,7 @@ import dev.kwasi.echoservercomplete.R
 import dev.kwasi.echoservercomplete.models.ContentModel
 
 class AttendeeListAdapter(private val iFaceImpl:AttendeeListAdapterInterface): RecyclerView.Adapter<AttendeeListAdapter.ViewHolder>() {
-    private val attendeeList:MutableList<WifiP2pDevice> = mutableListOf()
+    private val attendeeList:MutableList<String> = mutableListOf()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val studentId: TextView = itemView.findViewById(R.id.studentId)
@@ -25,7 +25,7 @@ class AttendeeListAdapter(private val iFaceImpl:AttendeeListAdapterInterface): R
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val attendee = attendeeList[position]
 
-        holder.studentId.text = attendee.deviceName
+        holder.studentId.text = attendee
 
         holder.itemView.setOnClickListener {
             iFaceImpl.onAttendeeClicked(attendee)
@@ -36,15 +36,21 @@ class AttendeeListAdapter(private val iFaceImpl:AttendeeListAdapterInterface): R
         return attendeeList.size
     }
 
-    fun addItemToEnd(attendee: WifiP2pDevice){
+    fun addItemToEnd(attendee: String){
         attendeeList.add(attendee)
         notifyItemInserted(attendeeList.size)
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateList(newAttendeeList:Collection<WifiP2pDevice>){
+    fun updateList(newAttendeeList:Collection<String>){
         attendeeList.clear()
         attendeeList.addAll(newAttendeeList)
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun addAttendee(newAttendee: String){
+        attendeeList.add(newAttendee)
         notifyDataSetChanged()
     }
 }
