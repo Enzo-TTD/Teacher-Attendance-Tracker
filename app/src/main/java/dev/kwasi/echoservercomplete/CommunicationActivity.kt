@@ -64,123 +64,6 @@ class CommunicationActivity : AppCompatActivity(), WifiDirectInterface, PeerList
     private var client: Client? = null
     private var deviceIp: String = ""
 
-    private val studentIDList = arrayOf(
-        816111111,
-        816222222,
-        816333333,
-        816444444,
-        816555555,
-        816666666,
-        816777777,
-        816888888,
-        816999999,
-        816117992
-    )
-
-    private fun hashStrSha256(str: String): String{
-        val algorithm = "SHA-256"
-        val hashedString = MessageDigest.getInstance(algorithm).digest(str.toByteArray(UTF_8))
-        return hashedString.toHex();
-    }
-
-    private fun generateAESKey(seed: String): SecretKeySpec {
-        val first32Chars = getFirstNChars(seed,32)
-        val secretKey = SecretKeySpec(first32Chars.toByteArray(), "AES")
-        return secretKey
-    }
-
-    private fun generateIV(seed: String): IvParameterSpec {
-        val first16Chars = getFirstNChars(seed, 16)
-        return IvParameterSpec(first16Chars.toByteArray())
-    }
-
-    @OptIn(ExperimentalEncodingApi::class)
-    private fun encryptMessage(plaintext: String, aesKey:SecretKey, aesIv: IvParameterSpec):String{
-        val plainTextByteArr = plaintext.toByteArray()
-        val cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING")
-        cipher.init(Cipher.ENCRYPT_MODE, aesKey, aesIv)
-        val encrypt = cipher.doFinal(plainTextByteArr)
-        return Base64.Default.encode(encrypt)
-    }
-
-    @OptIn(ExperimentalEncodingApi::class)
-    private fun decryptMessage(encryptedText: String, aesKey:SecretKey, aesIv: IvParameterSpec):String{
-        val textToDecrypt = Base64.Default.decode(encryptedText)
-        val cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING")
-        cipher.init(Cipher.DECRYPT_MODE, aesKey,aesIv)
-        val decrypt = cipher.doFinal(textToDecrypt)
-        return String(decrypt)
-    }
-
-    private fun generateR(): Int
-    {
-        return Random.nextInt()
-    }
-
-    private fun getEncryption(R: String, seed: String): String
-    {
-        val strongSeed = hashStrSha256(seed)
-        val aesKey = generateAESKey(strongSeed)
-        val aesIV = generateIV(strongSeed)
-
-        Log.e("CA", "Random number: $R")
-        Log.e("CA", seed)
-
-        return encryptMessage(R, aesKey, aesIV)
-    }
-
-    private fun verifyR(R: String, id: String, encryption: String): Boolean
-    {
-        val seed = id
-        val strongSeed = hashStrSha256(seed)
-        val aesKey = generateAESKey(strongSeed)
-        val aesIV = generateIV(strongSeed)
-
-        val decryption = decryptMessage(encryption, aesKey, aesIV)
-
-        return (R == decryption)
-    }
-
-    private fun encryptTest()
-    {
-        val R = generateR()
-        val encryption = getEncryption(R.toString(), studentIDList[9].toString())
-
-        Log.e("CA", "Encrypted message: $encryption")
-
-        val res = verifyR(R.toString(), studentIDList[9].toString(), encryption)
-
-        if(res)
-        {
-            Log.e("CA", "Decryption successful")
-        }
-        else
-        {
-            Log.e("CA", "Decryption unsuccessful")
-        }
-    }
-
-
-//    fun encryptTest()
-//    {
-//        val seed = studentIDList[9].toString()
-//        val strongSeed = hashStrSha256(seed)
-//        val aesKey = generateAESKey(strongSeed)
-//        val aesIV = generateIV(strongSeed)
-//        val R = generateR()
-//        Log.e("CA", "Random number: $R")
-//        Log.e("CA", seed)
-//        val cyphertext = encryptMessage(R, aesKey, aesIV)
-//        val decryptedCypherText = decryptMessage(cyphertext, aesKey, aesIV)
-//        Log.e("CA", "Encryption: $cyphertext")
-//        Log.e("CA", "Decrypted: $decryptedCypherText")
-//
-//        if(R == decryptedCypherText)
-//        {
-//            Log.e("CA", "Decryption successful")
-//        }
-//    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -227,38 +110,11 @@ class CommunicationActivity : AppCompatActivity(), WifiDirectInterface, PeerList
     fun createGroup(view: View) {
         wfdManager?.createGroup()
         classStarted = true
-//        Log.e("CA", studentIDList.contentToString())
-//        encryptTest()
-//        val idTest: Boolean = lookupID(816117929)
-//
-//        if(idTest)
-//        {
-//            Log.e("CA", "Student ID found")
-//        }
-//        else
-//        {
-//            Log.e("CA", "Student ID not found")
-//        }
-
-//        attendeeListAdapter?.addAttendee("816000000")
-//        attendeeListAdapter?.addAttendee("816111111")
-//        attendeeListAdapter?.addAttendee("816222222")
-//        attendeeListAdapter?.addAttendee("816222222")
-//        attendeeListAdapter?.addAttendee("816333333")
-//        attendeeListAdapter?.addAttendee("816444444")
 
         updateUI()
     }
 
-    fun lookupID(id: Int): Boolean
-    {
-        for(s in studentIDList)
-        {
-            if(id == s) return true
-        }
 
-        return false
-    }
 
     fun endClass(view: View) {
         server?.close()
@@ -396,14 +252,27 @@ class CommunicationActivity : AppCompatActivity(), WifiDirectInterface, PeerList
         wfdManager?.connectToPeer(peer)
     }
 
-    private fun switchStudentChat()
+
+    override fun onAttendeeClicked(attendee: String)
     {
 
     }
 
-    override fun onAttendeeClicked(attendee: String)
-    {
-        switchStudentChat()
+    override fun onGetStudentIdClicked(studentId: String) {
+
+        val ipAddress = server?.getIpByStudentId(studentId)
+
+        if (ipAddress != null) {
+            deviceIp = ipAddress // Set the device IP from the server's response
+            chatListAdapter?.clearChatList() // Clear the chat list
+
+//            val student: TextView = findViewById(R.id.studentChat)
+//            student.text = "Student Chat - $studentId" // Update the text with the student ID
+        } else {
+            // Handle the case where the IP address is null
+            Log.e("Chat", "No IP address found for student ID: $studentId")
+            }
+
     }
 
     private fun onAttendeeClicked()

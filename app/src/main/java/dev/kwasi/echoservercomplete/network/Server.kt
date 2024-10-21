@@ -44,6 +44,7 @@ private var seed = " "
 private var clientIp = " "
 private var studentId = " "
 private var onStudentIdChangeListener: ((String) -> Unit)? = null
+private val studentIpMap: HashMap<String, String> = HashMap()
 
 
 class Server(private val iFaceImpl:NetworkMessageInterface) {
@@ -120,6 +121,7 @@ class Server(private val iFaceImpl:NetworkMessageInterface) {
 //                                            Log.e("SERVER", maybeR)
                                             if(tempcheck==msg){
                                                 studentId=studentID.toString()
+                                                storeStudentIdWithIp(studentId, clientIp)
                                                 seed = tempStr
                                                 isverfied = true
                                                 Log.e("SERVER", "About to call notifyStudentIdChanged with ID: $studentId")
@@ -247,6 +249,13 @@ class Server(private val iFaceImpl:NetworkMessageInterface) {
         onStudentIdChangeListener = listener
     }
 
+    private fun storeStudentIdWithIp(studentId: String, ipAddress: String) {
+        studentIpMap[studentId] = ipAddress
+        Log.e("SERVER", "Stored student ID: $studentId with IP: $ipAddress")
+    }
 
+    fun getIpByStudentId(studentId: String): String? {
+        return studentIpMap[studentId]
+    }
 
 }

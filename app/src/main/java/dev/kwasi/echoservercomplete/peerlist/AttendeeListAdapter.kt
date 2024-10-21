@@ -5,6 +5,7 @@ import android.net.wifi.p2p.WifiP2pDevice
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import dev.kwasi.echoservercomplete.R
@@ -15,6 +16,7 @@ class AttendeeListAdapter(private val iFaceImpl:AttendeeListAdapterInterface): R
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val studentId: TextView = itemView.findViewById(R.id.studentId)
+        val getStudentIdButton: Button = itemView.findViewById(R.id.question)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,6 +31,11 @@ class AttendeeListAdapter(private val iFaceImpl:AttendeeListAdapterInterface): R
 
         holder.itemView.setOnClickListener {
             iFaceImpl.onAttendeeClicked(attendee)
+        }
+
+        holder.getStudentIdButton.setOnClickListener {
+            // Call a method in the interface to handle button click
+            iFaceImpl.onGetStudentIdClicked(attendee) // Pass the attendee (studentId)
         }
     }
 
