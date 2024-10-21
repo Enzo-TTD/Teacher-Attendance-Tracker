@@ -240,12 +240,12 @@ class CommunicationActivity : AppCompatActivity(), WifiDirectInterface, PeerList
 //            Log.e("CA", "Student ID not found")
 //        }
 
-        attendeeListAdapter?.addAttendee("816000000")
-        attendeeListAdapter?.addAttendee("816111111")
-        attendeeListAdapter?.addAttendee("816222222")
-        attendeeListAdapter?.addAttendee("816222222")
-        attendeeListAdapter?.addAttendee("816333333")
-        attendeeListAdapter?.addAttendee("816444444")
+//        attendeeListAdapter?.addAttendee("816000000")
+//        attendeeListAdapter?.addAttendee("816111111")
+//        attendeeListAdapter?.addAttendee("816222222")
+//        attendeeListAdapter?.addAttendee("816222222")
+//        attendeeListAdapter?.addAttendee("816333333")
+//        attendeeListAdapter?.addAttendee("816444444")
 
         updateUI()
     }
@@ -280,6 +280,9 @@ class CommunicationActivity : AppCompatActivity(), WifiDirectInterface, PeerList
         // 2) discover nearby groups
         // ELSE IF there are nearby groups found, i need to show them in a list
         // ELSE IF i have a WFD connection i need to show a chat interface where i can send/receive messages
+
+
+
         val wfdAdapterErrorView:ConstraintLayout = findViewById(R.id.clWfdAdapterDisabled)
         wfdAdapterErrorView.visibility = if (!wfdAdapterEnabled) View.VISIBLE else View.GONE
 
@@ -315,25 +318,15 @@ class CommunicationActivity : AppCompatActivity(), WifiDirectInterface, PeerList
         networkPassword.text = "Network Password: $networkPasswordString"
 
         Log.e("CA", "Network Password: $networkPasswordString")
+
     }
 
     fun sendMessage(view: View) {
-        val enterMessage:EditText = findViewById(R.id.enterMessage)
-        val enterString = enterMessage.text.toString()
-
-        val seed = "816117992"
-        val encryptedMessage = getEncryption(enterString, seed)
-
-        Log.e("CA", enterString)
-        Log.e("CA", encryptedMessage)
-
-        val decryptedMessage = decryptMessage(encryptedMessage, generateAESKey(hashStrSha256(seed)), generateIV(hashStrSha256(seed)))
-
-        Log.e("CA", decryptedMessage)
-
-        val content = ContentModel(enterString, deviceIp)
-        enterMessage.text.clear()
-        client?.sendMessage(content)
+        val etMessage:EditText = findViewById(R.id.etMessage)
+        val etString = etMessage.text.toString()
+        val content = ContentModel(etString, deviceIp)
+        etMessage.text.clear()
+        server?.sendMessageToClient(content)
         chatListAdapter?.addItemToEnd(content)
 
     }
@@ -376,6 +369,8 @@ class CommunicationActivity : AppCompatActivity(), WifiDirectInterface, PeerList
         } else if (groupInfo.isGroupOwner && server == null){
             server = Server(this)
             deviceIp = "192.168.49.1"
+
+
         } else if (!groupInfo.isGroupOwner && client == null) {
             client = Client(this)
             deviceIp = client!!.ip
@@ -386,8 +381,15 @@ class CommunicationActivity : AppCompatActivity(), WifiDirectInterface, PeerList
     }
 
     override fun onDeviceStatusChanged(thisDevice: WifiP2pDevice) {
+
         val toast = Toast.makeText(this, "Device parameters have been updated" , Toast.LENGTH_SHORT)
         toast.show()
+        server?.setOnStudentIdChangeListener { studentId ->
+            runOnUiThread {
+                attendeeListAdapter?.addAttendee(studentId)
+                Log.e("CA", "New student joined with ID: $studentId")
+            }
+        }
     }
 
     override fun onPeerClicked(peer: WifiP2pDevice) {

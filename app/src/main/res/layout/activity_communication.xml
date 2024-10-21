@@ -267,26 +267,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/studentChat">
-
-            <EditText
-                android:id="@+id/enterMessage"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:inputType="textMultiLine"
-                android:minLines="3"
-                android:maxLines="5"
-                android:hint="Send to student..."
-                android:layout_height="wrap_content"
-                />
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_weight="0.4"
-                android:text="Send"
-                android:onClick="sendMessage"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@+id/studentChat"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
